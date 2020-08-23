@@ -1,0 +1,1 @@
+include ':baselib', ':widgetlib', ':reslib', ':commonlib', ':app', ':assembly_a', ':assembly_b'

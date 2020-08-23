@@ -1,0 +1,90 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+Properties configAssemblyProp = new Properties()
+configAssemblyProp.load(new FileInputStream(file("$rootDir/config_assembly.properties")))
+Properties configProp = new Properties()
+configProp.load(new FileInputStream(file("$rootDir/config.properties")))
+
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+    }
+}
+
+android {
+
+    compileSdkVersion rootProject.android_compileSdkVersion
+    buildToolsVersion rootProject.android_buildToolsVersion
+
+    defaultConfig {
+        applicationId "com.zhoujiulong.coroutineproject"
+        minSdkVersion android_minSdkVersion
+        targetSdkVersion android_targetSdkVersion
+        versionCode Integer.parseInt(configProp['VersionCode'])
+        versionName configProp['VersionName']
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {//可替换成自己的
+            storePassword 'sz123456'
+            keyAlias 'zhoujiulong'
+            keyPassword 'sz123456'
+            storeFile file('release.jks')
+            v2SigningEnabled true
+        }
+        debug {
+            storePassword 'sz123456'
+            keyAlias 'zhoujiulong'
+            keyPassword 'sz123456'
+            storeFile file('release.jks')
+            v2SigningEnabled true
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
+        }
+        debug {
+            //如果需要debug断点调试，以下两项需设置为false
+            minifyEnabled false//debug开启混淆,防止添加依赖没添加混淆，发布release包时报错
+            shrinkResources false//如果minifyEnabled设置为false，此项也需设置为false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    api project(':commonlib')
+
+    if (!Boolean.parseBoolean(configAssemblyProp['AssemblyARun'])) {
+        api project(':assembly_a')
+    }
+    if (!Boolean.parseBoolean(configAssemblyProp['AssemblyBRun'])) {
+        api project(':assembly_b')
+    }
+
+    kapt arouter_annotation
+
+}

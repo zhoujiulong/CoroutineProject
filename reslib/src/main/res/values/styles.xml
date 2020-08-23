@@ -1,0 +1,12 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:windowSoftInputMode">adjustResize|adjustUnspecified|stateAlwaysHidden
+        </item>
+        <item name="android:configChanges">keyboardHidden|orientation|screenSize</item>
+    </style>
+
+</resources>

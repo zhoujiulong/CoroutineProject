@@ -1,0 +1,101 @@
+Properties configAssemblyProp = new Properties()
+configAssemblyProp.load(new FileInputStream(file("$rootDir/config_assembly.properties")))
+
+Boolean isRun = Boolean.parseBoolean(configAssemblyProp['AssemblyBRun'])
+if (isRun) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+    }
+}
+
+android {
+    compileSdkVersion rootProject.android_compileSdkVersion
+    buildToolsVersion rootProject.android_buildToolsVersion
+
+    defaultConfig {
+        if (isRun) {
+            applicationId "com.zhoujiulong.assembly_b"
+        }
+        minSdkVersion android_minSdkVersion
+        targetSdkVersion android_targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    if (isRun) {
+        signingConfigs {
+            release {//可替换成自己的
+                storePassword 'sz123456'
+                keyAlias 'zhoujiulong'
+                keyPassword 'sz123456'
+                storeFile file('release.jks')
+                v2SigningEnabled true
+            }
+            debug {
+                keyAlias 'androiddebugkey'
+                keyPassword 'android'
+                storeFile file('debug.keystore')
+                v2SigningEnabled true
+            }
+        }
+
+        buildTypes {
+            release {
+                minifyEnabled true
+                shrinkResources true
+                signingConfig signingConfigs.release
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
+            }
+            debug {
+                //如果需要debug断点调试，以下两项需设置为false
+                minifyEnabled true//debug开启混淆,防止添加依赖没添加混淆，发布release包时报错
+                shrinkResources true//如果minifyEnabled设置为false，此项也需设置为false
+                signingConfig signingConfigs.release
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
+            }
+        }
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+    }
+
+    sourceSets {
+        main {
+            if (isRun) {
+                manifest.srcFile 'src/main/manifest/AndroidManifest.xml'
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
+        }
+    }
+
+    resourcePrefix "b_"
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+
+    if (isRun) {
+        api project(':commonlib')
+    } else {
+        compileOnly project(':commonlib')
+    }
+
+    kapt arouter_annotation
+}

@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.zhoujiulong.assembly_b">
+
+    <application android:theme="@style/AppTheme">
+        <activity android:name=".AssemblyBMainActivity"/>
+    </application>
+
+</manifest>

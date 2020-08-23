@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 自定义标题栏 -->
+    <declare-styleable name="WidgetTitleBar">
+        <attr name="widget_title_text" format="string" />
+        <attr name="widget_title_right_text" format="string" />
+        <attr name="widget_title_background" format="color" />
+        <attr name="widget_title_show_backicon" format="boolean" />
+        <attr name="widget_title_right_icon" format="reference" />
+    </declare-styleable>
+
+    <!-- 圆形图片控件 -->
+    <declare-styleable name="WidgetRoundImageView">
+        <attr name="widget_all_radius" format="dimension" />
+        <attr name="widget_top_left_radius" format="dimension" />
+        <attr name="widget_top_right_radius" format="dimension" />
+        <attr name="widget_bottom_left_radius" format="dimension" />
+        <attr name="widget_bottom_right_radius" format="dimension" />
+    </declare-styleable>
+
+    <!-- 状态页面 -->
+    <declare-styleable name="WidgetLoadingView">
+        <!--初始状态 0：刷新，1：显示内容，2：网络错误，3：空页面，4：其它错误 -->
+        <attr name="widget_loading_init_type" format="integer" />
+        <attr name="widget_loading_background" format="reference" />
+        <attr name="widget_loading_empty_icon" format="reference" />
+        <attr name="widget_loading_empty_center_msg" format="string" />
+        <attr name="widget_loading_empty_bottom_bt_msg" format="string" />
+        <attr name="widget_loading_error_icon" format="reference" />
+        <attr name="widget_loading_error_center_msg" format="string" />
+        <attr name="widget_loading_error_bottom_bt_msg" format="string" />
+        <attr name="widget_loading_top_padding" format="dimension" />
+        <attr name="widget_loading_bottom_padding" format="dimension" />
+    </declare-styleable>
+
+</resources>
+
+
+
+

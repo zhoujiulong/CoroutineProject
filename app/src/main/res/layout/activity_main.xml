@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <com.zhoujiulong.widgetlib.widget.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:widget_title_show_backicon="false"
+        app:widget_title_text="主页" />
+
+    <TextView
+        android:id="@+id/tv_go_a"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="跳转到 A 模块" />
+
+    <TextView
+        android:id="@+id/tv_go_b"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="跳转到 B 模块" />
+
+    <TextView
+        android:id="@+id/tvRequestTest"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="网络请求测试" />
+
+    <TextView
+        android:id="@+id/tv_download_file"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="下载文件" />
+
+    <TextView
+        android:id="@+id/tv_download_detail"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="" />
+
+</LinearLayout>

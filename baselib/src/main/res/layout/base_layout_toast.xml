@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_msg"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginLeft="@dimen/dip40"
+    android:layout_marginRight="@dimen/dip40"
+    android:background="@drawable/base_shape_bg_toast"
+    android:gravity="center"
+    android:lineSpacingExtra="@dimen/dip10"
+    android:orientation="vertical"
+    android:padding="@dimen/dip16"
+    android:textColor="#FFFFFF"
+    android:textSize="@dimen/sip26" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

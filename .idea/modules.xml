@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CoroutineProjectSample2.iml" filepath="$PROJECT_DIR$/.idea/modules/CoroutineProjectSample2.iml" group="CoroutineProjectSample2" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="CoroutineProjectSample2/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/assembly_a/assembly_a.iml" filepath="$PROJECT_DIR$/.idea/modules/assembly_a/assembly_a.iml" group="CoroutineProjectSample2/assembly_a" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/assembly_b/assembly_b.iml" filepath="$PROJECT_DIR$/.idea/modules/assembly_b/assembly_b.iml" group="CoroutineProjectSample2/assembly_b" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/baselib/baselib.iml" filepath="$PROJECT_DIR$/.idea/modules/baselib/baselib.iml" group="CoroutineProjectSample2/baselib" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/commonlib/commonlib.iml" filepath="$PROJECT_DIR$/.idea/modules/commonlib/commonlib.iml" group="CoroutineProjectSample2/commonlib" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/reslib/reslib.iml" filepath="$PROJECT_DIR$/.idea/modules/reslib/reslib.iml" group="CoroutineProjectSample2/reslib" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/widgetlib/widgetlib.iml" filepath="$PROJECT_DIR$/.idea/modules/widgetlib/widgetlib.iml" group="CoroutineProjectSample2/widgetlib" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_error"
+        android:layout_width="@dimen/dip200"
+        android:layout_height="@dimen/dip200"
+        android:scaleType="fitXY"
+        android:src="@mipmap/ic_loadingview_empty" />
+
+    <TextView
+        android:id="@+id/tv_error_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dip30"
+        android:lineSpacingExtra="@dimen/dip12"
+        android:gravity="center"
+        android:text="服务器开小差"
+        android:textColor="#A7A1A4"
+        android:textSize="@dimen/dip26" />
+
+    <TextView
+        android:id="@+id/tv_error_bottom"
+        android:layout_width="@dimen/dip180"
+        android:layout_height="@dimen/dip70"
+        android:layout_marginTop="@dimen/dip40"
+        android:background="@drawable/widget_shape_bg_empty_bt"
+        android:gravity="center"
+        android:text="刷新一下"
+        android:textColor="#192E76"
+        android:textSize="@dimen/sip26"
+        android:visibility="gone" />
+
+</LinearLayout>

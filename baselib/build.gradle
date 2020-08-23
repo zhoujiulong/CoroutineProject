@@ -1,0 +1,85 @@
+apply plugin: 'com.android.library'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+// 加载config.properties文件
+Properties configProp = new Properties()
+configProp.load(new FileInputStream(file("$rootDir/config.properties")))
+
+android {
+
+    compileSdkVersion rootProject.android_compileSdkVersion
+    buildToolsVersion rootProject.android_buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion android_minSdkVersion
+        targetSdkVersion android_targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            buildConfigField("String", "BASE_URL", configProp['ReleaseUrl'])
+            buildConfigField("boolean", "DEBUG_MODE", "false")//是否debug模式
+        }
+        debug {
+            buildConfigField("String", "BASE_URL", configProp['DebugUrl'])
+            buildConfigField("boolean", "DEBUG_MODE", "true")//是否debug模式
+        }
+    }
+
+    resourcePrefix "base_"
+}
+
+dependencies {
+    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+    api project(':reslib')
+
+    api 'androidx.appcompat:appcompat:1.2.0'
+    api 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    api 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+    api 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    api 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
+
+    api koltin
+    //低版本分包、64k限制解决
+    api 'com.android.support:multidex:1.0.3'
+    //网络请求
+    api 'com.squareup.retrofit2:retrofit:2.7.1'
+    api 'com.squareup.retrofit2:converter-gson:2.5.0'
+    api 'com.squareup.okhttp3:logging-interceptor:4.3.0'
+    //图片加载
+    api 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    api 'com.github.bumptech.glide:okhttp3-integration:4.10.0'
+    //下拉刷新 https://github.com/scwang90/SmartRefreshLayout
+    api 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
+    //上拉加載更多和 adapter 適配 https://github.com/CymChad/BaseRecyclerViewAdapterHelper
+    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
+    //消息订阅 https://github.com/greenrobot/EventBus
+    api 'org.greenrobot:eventbus:3.1.1'
+    //https://github.com/alibaba/ARouter
+    api 'com.alibaba:arouter-api:1.5.0'
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
