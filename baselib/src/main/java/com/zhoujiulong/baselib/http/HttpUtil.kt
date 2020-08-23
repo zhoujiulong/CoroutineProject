@@ -80,24 +80,18 @@ object HttpUtil {
     /**
      * 发送下载网络请求
      *
-     * @param reTag              请求标记，用于取消请求用
-     * @param downLoadFilePath 下载文件保存路径
-     * @param downloadListener 下载回调
+     * @param scope 网络请求的协程
+     * @param flePath 下载文件保存路径
+     * @param listener 下载回调
      */
     fun sendDownloadRequest(
-        reTag: String, call: retrofit2.Call<ResponseBody>, downLoadFilePath: String,
-        fileName: String, downloadListener: DownLoadListener
+        scope: CoroutineScope, call: retrofit2.Call<ResponseBody>, flePath: String,
+        fileName: String, listener: DownLoadListener
     ) {
         RequestHelper.instance
-            .sendDownloadRequest(reTag, call, downLoadFilePath, fileName, downloadListener)
+            .sendDownloadRequest(scope, call, flePath, fileName, listener)
     }
 
-    /**
-     * 根据请求的标记 reTag 取消请求和 Observer
-     */
-    fun cancelWithTag(reTag: String) {
-        RequestManager.instance.cancelRequestWithTag(reTag)
-    }
 }
 
 

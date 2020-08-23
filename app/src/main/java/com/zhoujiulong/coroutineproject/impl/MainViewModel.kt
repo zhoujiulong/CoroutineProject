@@ -29,7 +29,7 @@ class MainViewModel : BaseViewModel<MainModel>() {
         showLoading()
         mModel.downLoadApk(object : DownLoadListener() {
             override fun onProgress(progress: Int) {
-                Log.d("zhoujiulong", "下载进度：$progress")
+                Log.d("zhoujiulongtest", "下载进度：$progress")
             }
 
             override fun onDone(fileAbsPath: String) {
@@ -50,7 +50,6 @@ class MainViewModel : BaseViewModel<MainModel>() {
             override fun requestSuccess(data: DataResponse<String>) {
                 hideLoading()
                 ToastUtil.toast("请求成功：${data.data}")
-                Log.d("zhoujiulongtest", "requestSuccess.thread:${Thread.currentThread().name}")
             }
 
             override fun requestError(
@@ -58,7 +57,6 @@ class MainViewModel : BaseViewModel<MainModel>() {
             ) {
                 hideLoading()
                 ToastUtil.toast("请求失败：$msg")
-                Log.d("zhoujiulongtest", "requestError.thread:${Thread.currentThread().name}")
             }
         })
     }

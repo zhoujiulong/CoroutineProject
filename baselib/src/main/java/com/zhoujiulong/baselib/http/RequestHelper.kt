@@ -1,7 +1,5 @@
 package com.zhoujiulong.baselib.http
 
-import android.os.Handler
-import android.os.Looper
 import com.zhoujiulong.baselib.http.listener.DownLoadListener
 import com.zhoujiulong.baselib.http.listener.OnTokenInvalidListener
 import com.zhoujiulong.baselib.http.listener.RequestListener
@@ -16,12 +14,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 
 /**
  * Author : zhoujiulong
@@ -138,98 +134,34 @@ internal class RequestHelper private constructor() {
     /**
      * 发送下载网络请求
      *
-     * @param reTag              请求标记，用于取消请求用
-     * @param downLoadFilePath 下载文件保存路径
-     * @param downloadListener 下载回调
+     * @param scope 网络请求的协程
+     * @param flePath 下载文件保存路径
+     * @param listener 下载回调
      */
     fun sendDownloadRequest(
-        reTag: String, call: Call<ResponseBody>, downLoadFilePath: String,
-        fileName: String, downloadListener: DownLoadListener
+        scope: CoroutineScope, call: Call<ResponseBody>, flePath: String,
+        fileName: String, listener: DownLoadListener
     ) {
         if (!NetworkUtil.isNetworkAvailable(ContextUtil.getContext())) {
-            downloadListener.onFail("网络连接失败")
+            listener.onFail("网络连接失败")
             return
         }
-        RequestManager.instance.addCall(reTag, call)
-        call.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                if (!RequestManager.instance.hasRequest(reTag)) return
-                if (response.code() != 200) {
-                    checkErrorCode(response, downloadListener)
-                    return
-                }
-                // 储存下载文件的目录
-                val saveFile = File(downLoadFilePath)
-                if (!saveFile.exists() || !saveFile.isDirectory) {
-                    val mkDirSuccess = saveFile.mkdir()
-                    if (!mkDirSuccess) downloadListener.onFail("创建本地的文件夹失败")
-                    return
-                }
-                var file = File(saveFile, fileName)
-                if (file.exists()) file =
-                    File(saveFile, "${System.currentTimeMillis()}${fileName}")
-                val filePath = file.absolutePath
-                val handler = Handler(Looper.getMainLooper())
-                Thread(Runnable {
-                    var fos: FileOutputStream? = null
-                    var bis: BufferedInputStream? = null
-                    try {
-                        val total = response.body()!!.contentLength()
-                        bis = BufferedInputStream(response.body()!!.byteStream())
-                        fos = FileOutputStream(file)
-                        var sum: Long = 0
-                        val buf = ByteArray(1024 * 10)
-                        var tempProgress = -1
-                        var len: Int = bis.read(buf)
-                        while (len != -1) {
-                            fos.write(buf, 0, len)
-                            sum += len.toLong()
-                            val progress = (sum * 100 / total).toInt()
-                            //再次判断请求所在的页面是否销毁了，如果销毁了不再往下执行
-                            if (RequestManager.instance.hasRequest(reTag)) {
-                                if (progress > tempProgress) {
-                                    tempProgress = progress
-                                    handler.post { downloadListener.onProgress(progress) }
-                                }
-                            } else {
-                                break
-                            }
-                            len = bis.read(buf)
-                        }
-                        fos.flush()
-                        //再次判断请求所在的页面是否销毁了，如果销毁了不再往下执行
-                        if (RequestManager.instance.hasRequest(reTag)) {
-                            handler.post { downloadListener.onDone(filePath) }
-                        }
-                    } catch (e: Exception) {
-                        downLoadFileFail(reTag, e, downloadListener, handler)
-                    } finally {
-                        RequestManager.instance.removeCall(reTag, call)
-                        try {
-                            response.body()!!.byteStream().close()
-                        } catch (e: IOException) {
-                            downLoadFileFail(reTag, e, downloadListener, handler)
-                        }
-                        try {
-                            bis?.close()
-                        } catch (e: IOException) {
-                            downLoadFileFail(reTag, e, downloadListener, handler)
-                        }
-                        try {
-                            fos?.close()
-                        } catch (e: IOException) {
-                            downLoadFileFail(reTag, e, downloadListener, handler)
-                        }
+        scope.launch(Dispatchers.Main) {
+            try {
+                val response = withContext(Dispatchers.IO) { call.execute() }
+                val saveFile = File(flePath)
+                when {
+                    response.code() != 200 -> checkErrorCode(response, listener)
+                    !saveFile.exists() || !saveFile.isDirectory -> {
+                        val mkDirSuccess = saveFile.mkdir()
+                        if (!mkDirSuccess) listener.onFail("创建本地的文件夹失败")
                     }
-                }).start()
+                    else -> sendDownloadRequestSuccess(saveFile, fileName, response, listener)
+                }
+            } catch (e: Exception) {
+                listener.onFail("下载失败" + e.message)
             }
-
-            override fun onFailure(call: Call<ResponseBody>, throwable: Throwable) {
-                if (!RequestManager.instance.hasRequest(reTag)) return
-                RequestManager.instance.removeCall(reTag, call)
-                downloadListener.onFail("下载失败" + throwable.message)
-            }
-        })
+        }
     }
 
     private fun checkErrorCode(response: Response<ResponseBody>, listener: DownLoadListener) {
@@ -242,12 +174,42 @@ internal class RequestHelper private constructor() {
         }
     }
 
-    private fun downLoadFileFail(
-        reTag: String, e: Exception, downloadListener: DownLoadListener, handler: Handler
+    private suspend fun sendDownloadRequestSuccess(
+        saveFile: File, fileName: String,
+        response: Response<ResponseBody>, listener: DownLoadListener
     ) {
-        //再次判断请求所在的页面是否销毁了，如果销毁了不再往下执行
-        if (RequestManager.instance.hasRequest(reTag)) {
-            handler.post { downloadListener.onFail("下载文件失败：" + e.message) }
+        var file = File(saveFile, fileName)
+        if (file.exists()) file = File(saveFile, "${System.currentTimeMillis()}${fileName}")
+        val filePath = file.absolutePath
+
+        withContext(Dispatchers.IO) {
+            var fos: FileOutputStream? = null
+            var bis: BufferedInputStream? = null
+            try {
+                val total = response.body()!!.contentLength()
+                bis = BufferedInputStream(response.body()!!.byteStream())
+                fos = FileOutputStream(file)
+                var sum: Long = 0
+                val buf = ByteArray(1024 * 10)
+                var tempProgress = -1
+                var len: Int = bis.read(buf)
+                while (len != -1) {
+                    fos.write(buf, 0, len)
+                    sum += len.toLong()
+                    val progress = (sum * 100 / total).toInt()
+                    if (progress > tempProgress) {
+                        tempProgress = progress
+                        withContext(Dispatchers.Main) { listener.onProgress(progress) }
+                    }
+                    len = bis.read(buf)
+                }
+                fos.flush()
+                withContext(Dispatchers.Main) { listener.onDone(filePath) }
+            } finally {
+                response.body()!!.byteStream().close()
+                bis?.close()
+                fos?.close()
+            }
         }
     }
 

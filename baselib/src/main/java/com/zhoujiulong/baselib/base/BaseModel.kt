@@ -1,6 +1,5 @@
 package com.zhoujiulong.baselib.base
 
-import com.zhoujiulong.baselib.http.HttpUtil
 import kotlinx.coroutines.CoroutineScope
 
 abstract class BaseModel<T> {
@@ -21,7 +20,6 @@ abstract class BaseModel<T> {
     }
 
     fun onCleared() {
-        HttpUtil.cancelWithTag(Tag)
     }
 
 }

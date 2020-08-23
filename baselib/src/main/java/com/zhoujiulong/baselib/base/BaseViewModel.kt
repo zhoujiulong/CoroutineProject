@@ -4,7 +4,6 @@ package com.zhoujiulong.baselib.base
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zhoujiulong.baselib.http.HttpUtil
 
 abstract class BaseViewModel<M : BaseModel<*>> : ViewModel() {
 
@@ -31,7 +30,6 @@ abstract class BaseViewModel<M : BaseModel<*>> : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        HttpUtil.cancelWithTag(Tag)
         mModel.onCleared()
     }
 

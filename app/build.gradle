@@ -51,8 +51,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
         }
@@ -70,7 +70,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-
 
 
 dependencies {
