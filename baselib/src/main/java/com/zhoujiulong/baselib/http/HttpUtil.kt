@@ -59,9 +59,7 @@ object HttpUtil {
         callClass: Class<T>, baseUrl: String,
         tempInterceptor: List<Interceptor>?, vararg timeOuts: TimeOut
     ): T {
-        return ServiceManager.instance.getService(
-            callClass, baseUrl, tempInterceptor, timeOuts = *timeOuts
-        )
+        return ServiceManager.instance.getService(callClass, baseUrl, tempInterceptor, *timeOuts)
     }
 
     /**
@@ -88,8 +86,7 @@ object HttpUtil {
         scope: CoroutineScope, call: retrofit2.Call<ResponseBody>, flePath: String,
         fileName: String, listener: DownLoadListener
     ) {
-        RequestHelper.instance
-            .sendDownloadRequest(scope, call, flePath, fileName, listener)
+        RequestHelper.instance.sendDownloadRequest(scope, call, flePath, fileName, listener)
     }
 
 }

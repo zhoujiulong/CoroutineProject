@@ -21,6 +21,9 @@ class MainActivity : BaseActivity<MainViewModel>() {
     override fun initListener() {
         setOnClick(tv_go_a, tv_go_b, tvRequestTest, tv_download_file)
 
+        mViewModel.mDownLoadProgress.observe(this, Observer {
+            tv_download_detail.text = "下载进度：$it"
+        })
         mViewModel.mDownLoadSuccess.observe(this, Observer {
             ToastUtil.toast("下载成功：$it")
         })

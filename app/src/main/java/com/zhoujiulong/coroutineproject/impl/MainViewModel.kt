@@ -1,6 +1,5 @@
 package com.zhoujiulong.coroutineproject.impl
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.zhoujiulong.baselib.base.BaseViewModel
 import com.zhoujiulong.baselib.http.listener.DownLoadListener
@@ -18,6 +17,7 @@ import com.zhoujiulong.baselib.utils.ToastUtil
  */
 class MainViewModel : BaseViewModel<MainModel>() {
 
+    val mDownLoadProgress by lazy { MutableLiveData(0) }
     val mDownLoadSuccess by lazy { MutableLiveData<String>() }
     val mDownLoadFail by lazy { MutableLiveData<String>() }
 
@@ -29,7 +29,7 @@ class MainViewModel : BaseViewModel<MainModel>() {
         showLoading()
         mModel.downLoadApk(object : DownLoadListener() {
             override fun onProgress(progress: Int) {
-                Log.d("zhoujiulongtest", "下载进度：$progress")
+                mDownLoadProgress.value = progress
             }
 
             override fun onDone(fileAbsPath: String) {
