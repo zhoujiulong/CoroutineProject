@@ -2,9 +2,10 @@ apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
 
+apply plugin: 'kotlin-kapt'
+
 apply plugin: 'kotlin-android-extensions'
 
-apply plugin: 'kotlin-kapt'
 
 Properties configAssemblyProp = new Properties()
 configAssemblyProp.load(new FileInputStream(file("$rootDir/config_assembly.properties")))

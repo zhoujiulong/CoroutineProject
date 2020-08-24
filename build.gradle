@@ -29,10 +29,10 @@ task clean(type: Delete) {
 }
 
 ext {
-    android_compileSdkVersion = 28
-    android_buildToolsVersion = '28.0.3'
+    android_compileSdkVersion = 29
+    android_buildToolsVersion = '29.0.2'
     android_minSdkVersion = 16
-    android_targetSdkVersion = 28
+    android_targetSdkVersion = 29
 
     koltin = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 

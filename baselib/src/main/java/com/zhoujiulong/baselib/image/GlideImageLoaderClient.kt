@@ -10,7 +10,7 @@ import android.widget.ImageView
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.zhoujiulong.baselib.image.bean.ImageSize
 import com.zhoujiulong.baselib.image.listener.IGetBitmapListener
@@ -57,9 +57,12 @@ class GlideImageLoaderClient : IImageLoaderClient {
      * 获取缓存中的图片
      */
     override fun getBitmapFromCache(context: Context, url: String, listener: IGetBitmapListener) {
-        Glide.with(context).asBitmap().load(url).into(object : SimpleTarget<Bitmap>() {
+        Glide.with(context).asBitmap().load(url).into(object : CustomTarget<Bitmap>() {
             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                listener?.onBitmap(resource)
+                listener.onBitmap(resource)
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
             }
         })
     }
@@ -152,9 +155,12 @@ class GlideImageLoaderClient : IImageLoaderClient {
         blurRadius: Int,
         listener: IGetDrawableListener
     ) {
-        Glide.with(context).load(resId).into(object : SimpleTarget<Drawable>() {
+        Glide.with(context).load(resId).into(object : CustomTarget<Drawable>() {
             override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                listener?.onDrawable(resource)
+                listener.onDrawable(resource)
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
             }
         })
     }
@@ -165,9 +171,12 @@ class GlideImageLoaderClient : IImageLoaderClient {
         blurRadius: Int,
         listener: IGetDrawableListener
     ) {
-        Glide.with(context).load(url).into(object : SimpleTarget<Drawable>() {
+        Glide.with(context).load(url).into(object : CustomTarget<Drawable>() {
             override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                listener?.onDrawable(resource)
+                listener.onDrawable(resource)
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
             }
         })
     }

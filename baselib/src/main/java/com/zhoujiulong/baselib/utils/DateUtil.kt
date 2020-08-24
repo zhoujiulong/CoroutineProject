@@ -119,7 +119,7 @@ object DateUtil {
         val dateFormat = SimpleDateFormat(format, Locale.CHINA)
         var date: Long = 0
         try {
-            date = dateFormat.parse(time).time
+            date = dateFormat.parse(time)?.time ?: 0
         } catch (e: ParseException) {
             e.printStackTrace()
         }
@@ -136,7 +136,7 @@ object DateUtil {
         val dateFormat = SimpleDateFormat(format, Locale.CHINA)
         val date: Long
         try {
-            date = dateFormat.parse(time).time
+            date = dateFormat.parse(time)?.time ?: 0
             timeString = if (date <= 0) "" else format(date, "yyyy-MM")
         } catch (e: ParseException) {
             e.printStackTrace()
@@ -292,14 +292,12 @@ object DateUtil {
         val date = Calendar.getInstance()
         date.time = beginDate
         date.set(Calendar.DATE, date.get(Calendar.DATE) + distanceDay)
-        var endDate: Date? = null
-        try {
-            endDate = dft.parse(dft.format(date.time))
+        return try {
+            dft.format(dft.parse(dft.format(date.time)) ?: "")
         } catch (e: ParseException) {
             e.printStackTrace()
+            ""
         }
-
-        return dft.format(endDate)
     }
 
     /**
@@ -311,7 +309,7 @@ object DateUtil {
         val format = SimpleDateFormat(pattern, Locale.CHINA)
         val c = Calendar.getInstance()
         try {
-            c.time = format.parse(time)
+            format.parse(time)?.apply { c.time = this }
         } catch (e: ParseException) {
             e.printStackTrace()
         }

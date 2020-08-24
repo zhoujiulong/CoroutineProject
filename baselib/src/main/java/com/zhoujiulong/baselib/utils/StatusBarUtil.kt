@@ -130,7 +130,6 @@ object StatusBarUtil {
             e.printStackTrace()
             return false
         }
-
     }
 
     /**
@@ -167,7 +166,6 @@ object StatusBarUtil {
                 }
 
                 override fun onViewDetachedFromWindow(v: View) {
-
                 }
             })
         }
@@ -185,23 +183,23 @@ object StatusBarUtil {
 
     @TargetApi(23)
     private fun changeStatusBarModeRetainFlag(window: Window, out: Int): Int {
-        var out = out
-        out = retainSystemUiFlag(window, out, View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-        out = retainSystemUiFlag(window, out, View.SYSTEM_UI_FLAG_FULLSCREEN)
-        out = retainSystemUiFlag(window, out, View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
-        out = retainSystemUiFlag(window, out, View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-        out = retainSystemUiFlag(window, out, View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-        out = retainSystemUiFlag(window, out, View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION)
-        return out
+        var outTemp = out
+        outTemp = retainSystemUiFlag(window, outTemp, View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+        outTemp = retainSystemUiFlag(window, outTemp, View.SYSTEM_UI_FLAG_FULLSCREEN)
+        outTemp = retainSystemUiFlag(window, outTemp, View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+        outTemp = retainSystemUiFlag(window, outTemp, View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        outTemp = retainSystemUiFlag(window, outTemp, View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+        outTemp = retainSystemUiFlag(window, outTemp, View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION)
+        return outTemp
     }
 
     private fun retainSystemUiFlag(window: Window, out: Int, type: Int): Int {
-        var out = out
+        var outTemp = out
         val now = window.decorView.systemUiVisibility
         if (now and type == type) {
-            out = out or type
+            outTemp = outTemp or type
         }
-        return out
+        return outTemp
     }
 
 
@@ -312,8 +310,7 @@ object StatusBarUtil {
     private fun initStatusBarType(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mStatuBarType = if (isMIUICustomStatusBarLightModeImpl && MIUISetStatusBarLightMode(
-                    activity.window,
-                    true
+                    activity.window, true
                 )
             ) {
                 STATUSBAR_TYPE_MIUI
