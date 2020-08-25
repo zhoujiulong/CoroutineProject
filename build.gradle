@@ -37,6 +37,6 @@ ext {
     koltin = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     //ARouter https://github.com/alibaba/ARouter
-    arouter_annotation = 'com.alibaba:arouter-compiler:1.2.0'
+    arouter_annotation = 'com.alibaba:arouter-compiler:1.2.2'
 
 }
