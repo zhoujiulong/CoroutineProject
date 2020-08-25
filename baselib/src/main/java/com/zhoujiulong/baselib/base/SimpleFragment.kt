@@ -37,13 +37,6 @@ abstract class SimpleFragment : Fragment(), View.OnClickListener {
             initListener()
             initData()
             getData()
-
-            //懒加载，有可能先执行此处再执行 setUserVisibleHint 方法
-            mIsPrepared = true
-            if (userVisibleHint && mIsFirstTimeLoadData) {
-                mIsFirstTimeLoadData = false
-                getDataLazy()
-            }
         }
     }
 
@@ -57,9 +50,7 @@ abstract class SimpleFragment : Fragment(), View.OnClickListener {
     }
 
     fun hideLoading() {
-        if (activity is SimpleActivity) {
-            (activity as SimpleActivity).hideLoading()
-        }
+        if (activity is SimpleActivity) (activity as SimpleActivity).hideLoading()
     }
 
     /* ********************************************** 请求权限 **************************************************** */
@@ -107,38 +98,10 @@ abstract class SimpleFragment : Fragment(), View.OnClickListener {
     protected abstract fun getData()
 
     /**
-     * 懒加载数据在 ViewPager 管理的 Fragment 中才能使用
-     */
-    protected fun getDataLazy() {}
-
-    /**
      * 設置點擊
      */
     fun setOnClick(vararg views: View) {
-        for (view in views) {
-            view.setOnClickListener(this)
-        }
-    }
-
-    /* ********************************************** 懒加载数据在 ViewPager 管理的 Fragment 中才能使用 **************************************************** */
-    /* ********************************************** 懒加载数据在 ViewPager 管理的 Fragment 中才能使用 **************************************************** */
-
-    /**
-     * 页面布局是否初始化完成
-     */
-    protected var mIsPrepared = false
-
-    /**
-     * 是否是第一次加载数据
-     */
-    protected var mIsFirstTimeLoadData = true
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (isVisibleToUser && mIsFirstTimeLoadData && mIsPrepared) {
-            mIsFirstTimeLoadData = false
-            getDataLazy()
-        }
+        for (view in views) view.setOnClickListener(this)
     }
 
 }
