@@ -68,13 +68,13 @@ abstract class SimpleFragment : Fragment(), View.OnClickListener {
     /**
      * 请求权限
      */
-    fun requestPermission(vararg permissions: String, block: (success: Boolean) -> Unit) {
-        val list = mutableListOf<String>()
-        permissions.forEach { list.add(it) }
+    fun requestPermission(
+        success: () -> Unit,
+        fail: (unGrantPermissions: List<String>) -> Unit,
+        vararg permissions: String
+    ) {
         if (activity is SimpleActivity) {
-            (activity as SimpleActivity).requestPermission(
-                list, 0, true, block
-            )
+            (activity as SimpleActivity).requestPermission(success, fail, *permissions)
         }
     }
 

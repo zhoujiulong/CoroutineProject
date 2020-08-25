@@ -28,6 +28,13 @@
         android:text="跳转到 B 模块" />
 
     <TextView
+        android:id="@+id/tvPermissionTest"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="权限请求测试" />
+
+    <TextView
         android:id="@+id/tvRequestTest"
         android:layout_width="match_parent"
         android:layout_height="50dp"

@@ -1,12 +1,14 @@
 package com.zhoujiulong.baselib.base
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.zhoujiulong.baselib.LoadingDialog
 import com.zhoujiulong.baselib.app.ActivityFragmentManager
 
@@ -93,27 +95,39 @@ abstract class SimpleActivity : AppCompatActivity(), View.OnClickListener {
 
     /* ********************************************** 请求权限 **************************************************** */
     /* ********************************************** 请求权限 **************************************************** */
+    private val mRequestPermissionCode: Int = 123
+    private var mPermissionSuccessListener: (() -> Unit)? = null
+    private var mPermissionFailListener: ((unGrantPermissions: List<String>) -> Unit)? = null
+
     /**
      * 请求权限
      */
-    fun requestPermission(vararg permissions: String, block: (success: Boolean) -> Unit) {
-        val list = mutableListOf<String>()
-        permissions.forEach { list.add(it) }
-        requestPermission(list, 0, true, block)
+    fun requestPermission(
+        success: () -> Unit,
+        fail: (unGrantPermissions: List<String>) -> Unit,
+        vararg permissions: String
+    ) {
+        mPermissionSuccessListener = success
+        mPermissionFailListener = fail
+        ActivityCompat.requestPermissions(this, permissions, mRequestPermissionCode)
     }
 
-    fun requestPermission(
-        permissions: List<String>, index: Int,
-        allBeforeSuccess: Boolean, block: (success: Boolean) -> Unit
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
-//        val dis = RxPermissions(this).request(permissions[index]).subscribe {
-//            if (index == permissions.size - 1) {
-//                block(it && allBeforeSuccess)
-//            } else {
-//                requestPermission(permissions, index + 1, allBeforeSuccess && it, block)
-//            }
-//        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode != mRequestPermissionCode) return
+        val unGrantPermissions = mutableListOf<String>()
+        grantResults.withIndex().forEach {
+            if (it.value != PackageManager.PERMISSION_GRANTED) unGrantPermissions.add(permissions[it.index])
+        }
+        if (unGrantPermissions.isEmpty()) {
+            mPermissionSuccessListener?.apply { this() }
+        } else {
+            mPermissionFailListener?.apply { this(unGrantPermissions) }
+        }
     }
+
 
     /* ********************************************** 点击输入框外部隐藏软键盘 **************************************************** */
     /* ********************************************** 点击输入框外部隐藏软键盘 **************************************************** */
