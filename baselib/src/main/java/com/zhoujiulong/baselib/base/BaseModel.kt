@@ -2,6 +2,9 @@ package com.zhoujiulong.baselib.base
 
 import kotlinx.coroutines.CoroutineScope
 
+/**
+ * Model 基类
+ */
 abstract class BaseModel<T> {
 
     protected val Tag: String

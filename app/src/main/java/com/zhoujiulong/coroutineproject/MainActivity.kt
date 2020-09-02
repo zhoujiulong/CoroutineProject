@@ -15,7 +15,10 @@ class MainActivity : BaseActivity<MainViewModel>() {
 
     override fun getLayoutId(): Int = R.layout.activity_main
 
-    override fun getViewModelClass() = MainViewModel::class.java
+    override fun getViewModelClass(): Class<MainViewModel> {
+        mIsSaveStateViewModel = true
+        return MainViewModel::class.java
+    }
 
     override fun initView() {
     }

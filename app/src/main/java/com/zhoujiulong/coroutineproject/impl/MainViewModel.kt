@@ -1,6 +1,7 @@
 package com.zhoujiulong.coroutineproject.impl
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import com.zhoujiulong.baselib.base.BaseViewModel
 import com.zhoujiulong.baselib.http.listener.DownLoadListener
 import com.zhoujiulong.baselib.http.listener.RequestListener
@@ -13,9 +14,8 @@ import com.zhoujiulong.baselib.utils.ToastUtil
 /**
  * @author zhoujiulong
  * @createtime 2019/2/27 11:34
- * 空类，占位用
  */
-class MainViewModel : BaseViewModel<MainModel>() {
+class MainViewModel(private val mState: SavedStateHandle) : BaseViewModel<MainModel>() {
 
     val mDownLoadProgress by lazy { MutableLiveData(0) }
     val mDownLoadSuccess by lazy { MutableLiveData<String>() }

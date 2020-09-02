@@ -1,21 +1,34 @@
 package com.zhoujiulong.baselib.base
 
 import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
+import com.zhoujiulong.baselib.app.SimpleApplication
 
 abstract class BaseFragment<T : BaseViewModel<*>> : SimpleFragment() {
 
     protected val mViewModel: T by lazy {
-        val viewModel = initViewModel(ViewModelProvider(this))
+        val cl = getViewModelClass()
+        val viewModel = if (mIsSaveStateViewModel) {
+            SavedStateViewModelFactory(SimpleApplication.instance, this).create(cl)
+        } else {
+            ViewModelProvider(this).get(cl)
+        }
         viewModel.mShowLoadingData.observe(this, Observer {
             if (it) showLoading() else hideLoading()
         })
+
         viewModel
     }
 
     /**
-     * 创建 ViewModel
+     * 是否是加载 SavedStateViewModel
      */
-    abstract fun initViewModel(provider: ViewModelProvider): T
+    protected var mIsSaveStateViewModel = false
+
+    /**
+     * 获取 ViewModel class
+     */
+    abstract fun getViewModelClass(): Class<T>
 
 }

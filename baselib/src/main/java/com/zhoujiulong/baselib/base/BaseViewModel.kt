@@ -5,6 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
+/**
+ * ViewModel 基类
+ */
 abstract class BaseViewModel<M : BaseModel<*>> : ViewModel() {
 
     protected val mModel: M
