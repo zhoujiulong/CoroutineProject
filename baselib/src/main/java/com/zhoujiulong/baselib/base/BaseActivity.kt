@@ -4,7 +4,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
 
-abstract class BaseActivity<T : BaseViewModel<*>> : SimpleActivity() {
+abstract class BaseActivity<T : BaseViewModel<out BaseModel<*>>> : SimpleActivity() {
 
     protected val mViewModel: T by lazy {
         val cl = getViewModelClass()
