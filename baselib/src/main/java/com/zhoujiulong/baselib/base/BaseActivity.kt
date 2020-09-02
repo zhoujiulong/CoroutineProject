@@ -9,7 +9,7 @@ abstract class BaseActivity<T : BaseViewModel<out BaseModel<*>>> : SimpleActivit
     protected val mViewModel: T by lazy {
         val cl = getViewModelClass()
         val viewModel = if (mIsSaveStateViewModel) {
-            SavedStateViewModelFactory(application, this).create(cl)
+            ViewModelProvider(this, SavedStateViewModelFactory(application, this)).get(cl)
         } else {
             ViewModelProvider(this).get(cl)
         }

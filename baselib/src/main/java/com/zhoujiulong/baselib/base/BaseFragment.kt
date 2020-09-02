@@ -10,7 +10,9 @@ abstract class BaseFragment<T : BaseViewModel<out BaseModel<*>>> : SimpleFragmen
     protected val mViewModel: T by lazy {
         val cl = getViewModelClass()
         val viewModel = if (mIsSaveStateViewModel) {
-            SavedStateViewModelFactory(SimpleApplication.instance, this).create(cl)
+            ViewModelProvider(
+                this, SavedStateViewModelFactory(SimpleApplication.instance, this)
+            ).get(cl)
         } else {
             ViewModelProvider(this).get(cl)
         }
