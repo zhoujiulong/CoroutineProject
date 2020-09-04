@@ -8,16 +8,16 @@ import androidx.lifecycle.viewModelScope
 /**
  * ViewModel 基类
  */
-abstract class BaseViewModel<M : BaseModel<*>> : ViewModel() {
+abstract class BaseViewModel<M : BaseRepository<*>> : ViewModel() {
 
-    protected val mModel: M
+    protected val mRepository: M
     protected val Tag: String
 
     val mShowLoadingData by lazy { MutableLiveData<Boolean>() }
 
     init {
-        mModel = this.initModel()
-        mModel.attach(viewModelScope)
+        mRepository = this.initModel()
+        mRepository.attach(viewModelScope)
         Tag = System.currentTimeMillis().toString()
     }
 
@@ -33,7 +33,7 @@ abstract class BaseViewModel<M : BaseModel<*>> : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        mModel.onCleared()
+        mRepository.onCleared()
     }
 
 }

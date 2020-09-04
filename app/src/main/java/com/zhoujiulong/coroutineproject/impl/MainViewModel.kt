@@ -15,19 +15,19 @@ import com.zhoujiulong.baselib.utils.ToastUtil
  * @author zhoujiulong
  * @createtime 2019/2/27 11:34
  */
-class MainViewModel(private val mState: SavedStateHandle) : BaseViewModel<MainModel>() {
+class MainViewModel(private val mState: SavedStateHandle) : BaseViewModel<MainRepository>() {
 
     val mDownLoadProgress by lazy { MutableLiveData(0) }
     val mDownLoadSuccess by lazy { MutableLiveData<String>() }
     val mDownLoadFail by lazy { MutableLiveData<String>() }
 
-    override fun initModel() = MainModel()
+    override fun initModel() = MainRepository()
 
     fun downLoadApk() {
         val fileDir = ContextUtil.getContext().cacheDir.absolutePath
         val fileName = "downLoad2.apk"
         showLoading()
-        mModel.downLoadApk(object : DownLoadListener() {
+        mRepository.downLoadApk(object : DownLoadListener() {
             override fun onProgress(progress: Int) {
                 mDownLoadProgress.value = progress
             }
@@ -46,7 +46,7 @@ class MainViewModel(private val mState: SavedStateHandle) : BaseViewModel<MainMo
 
     fun requestTest() {
         showLoading()
-        mModel.requestTest(object : RequestListener<DataResponse<String>>() {
+        mRepository.requestTest(object : RequestListener<DataResponse<String>>() {
             override fun requestSuccess(data: DataResponse<String>) {
                 hideLoading()
                 ToastUtil.toast("请求成功：${data.data}")

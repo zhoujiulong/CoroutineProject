@@ -1,6 +1,6 @@
 package com.zhoujiulong.coroutineproject.impl
 
-import com.zhoujiulong.baselib.base.BaseModel
+import com.zhoujiulong.baselib.base.BaseRepository
 import com.zhoujiulong.baselib.http.HttpUtil
 import com.zhoujiulong.baselib.http.listener.DownLoadListener
 import com.zhoujiulong.baselib.http.listener.RequestListener
@@ -12,7 +12,7 @@ import com.zhoujiulong.baselib.http.response.DataResponse
  * @createtime 2019/2/27 11:32
  * 空类，占位用
  */
-class MainModel : BaseModel<MainService>() {
+class MainRepository : BaseRepository<MainService>() {
 
     override fun initService(): MainService {
         return HttpUtil.getService(

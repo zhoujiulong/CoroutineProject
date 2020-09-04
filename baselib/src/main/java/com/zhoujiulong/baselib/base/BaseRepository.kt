@@ -5,7 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 /**
  * Model 基类
  */
-abstract class BaseModel<T> {
+abstract class BaseRepository<T> {
 
     protected val Tag: String
     protected val mService: T

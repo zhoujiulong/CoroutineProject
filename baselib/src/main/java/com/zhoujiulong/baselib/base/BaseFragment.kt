@@ -5,7 +5,7 @@ import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
 import com.zhoujiulong.baselib.app.SimpleApplication
 
-abstract class BaseFragment<T : BaseViewModel<out BaseModel<*>>> : SimpleFragment() {
+abstract class BaseFragment<T : BaseViewModel<out BaseRepository<*>>> : SimpleFragment() {
 
     protected val mViewModel: T by lazy {
         val cl = getViewModelClass()
