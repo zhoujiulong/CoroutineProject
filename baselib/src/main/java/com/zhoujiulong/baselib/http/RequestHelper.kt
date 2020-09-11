@@ -203,9 +203,13 @@ internal class RequestHelper private constructor() {
                 fos.flush()
                 withContext(Dispatchers.Main) { listener.onDone(filePath) }
             } finally {
-                response.body()!!.byteStream().close()
-                bis?.close()
-                fos?.close()
+                try {
+                    response.body()?.byteStream()?.close()
+                    bis?.close()
+                    fos?.close()
+                } catch (e: Exception) {
+                    listener.onFail(response.code().toString() + "保存文件失败")
+                }
             }
         }
     }
