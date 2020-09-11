@@ -55,7 +55,9 @@ internal class RequestHelper private constructor() {
      * @param listener 请求完成后的回调
      * <T>      请求返回的数据对应的类型，第一层必须继承 BaseResponse
      */
-    fun <T> sendRequest(scope: CoroutineScope, call: Call<T>, listener: RequestListener<T>) {
+    fun <T : BaseResponse> sendRequest(
+        scope: CoroutineScope, call: Call<T>, listener: RequestListener<T>
+    ) {
         if (!NetworkUtil.isNetworkAvailable(ContextUtil.getContext())) {
             listener.requestError(
                 null, RequestErrorType.NO_INTERNET, "网络连接失败", CodeConstant.REQUEST_FAILD_CODE
@@ -65,13 +67,9 @@ internal class RequestHelper private constructor() {
         scope.launch(Dispatchers.Main) {
             try {
                 val response = withContext(Dispatchers.IO) { call.execute() }
-                val code = response.code()
-                when {
-                    code != 200 -> checkErrorCode(code, listener)
-                    response.body() == null -> listener.requestError(
-                        null, RequestErrorType.COMMON_ERROR, "返回数据为空！", code
-                    )
-                    else -> sendRequestSuccess(response, listener)
+                when (val code = response.code()) {
+                    200 -> sendRequestSuccess(response, listener)
+                    else -> checkErrorCode(code, listener)
                 }
             } catch (e: Exception) {
                 listener.requestError(
@@ -81,7 +79,7 @@ internal class RequestHelper private constructor() {
         }
     }
 
-    private fun <T> checkErrorCode(code: Int, listener: RequestListener<T>) {
+    private fun <T : BaseResponse> checkErrorCode(code: Int, listener: RequestListener<T>) {
         if (code == 502 || code == 404) {
             listener.requestError(
                 null, RequestErrorType.COMMON_ERROR, "服务器异常，请稍后重试", code
@@ -97,36 +95,35 @@ internal class RequestHelper private constructor() {
         }
     }
 
-    private fun <T> sendRequestSuccess(response: Response<T>, listener: RequestListener<T>) {
-        val body = response.body()
-        if (body is BaseResponse) {//判断返回的数据类型是否是继承 BaseResponse
-            val baseResponse = body as BaseResponse
-            if (CodeConstant.REQUEST_SUCCESS_CODE == baseResponse.code) {//获取数据正常
-                listener.requestSuccess(response.body() as T)
-                //{"message":"未登录或token失效","code":1002}
-            } else if (CodeConstant.ON_TOKEN_INVALID_CODE == baseResponse.code) {//Token失效
-                if (mOnTokenInvalidListener != null && !listener.checkLogin(
-                        baseResponse.code, baseResponse.message
-                    )
-                ) {
-                    listener.requestError(
-                        response.body(), RequestErrorType.TOKEN_INVALID,
-                        baseResponse.message, baseResponse.code
-                    )
-                    mOnTokenInvalidListener!!.onTokenInvalid(
-                        baseResponse.code, baseResponse.message
-                    )
-                }
-            } else {//从后台获取数据失败，其它未定义的错误
+    private fun <T : BaseResponse> sendRequestSuccess(
+        response: Response<T>, listener: RequestListener<T>
+    ) {
+        val baseResponse = response.body()
+        if (baseResponse == null) {
+            listener.requestError(
+                null, RequestErrorType.COMMON_ERROR, "返回数据为空！", response.code()
+            )
+            return
+        }
+        if (CodeConstant.REQUEST_SUCCESS_CODE == baseResponse.code) {//获取数据正常
+            listener.requestSuccess(baseResponse)
+        } else if (CodeConstant.ON_TOKEN_INVALID_CODE == baseResponse.code) {//Token失效
+            if (mOnTokenInvalidListener != null && !listener.checkLogin(
+                    baseResponse.code, baseResponse.message
+                )
+            ) {
                 listener.requestError(
-                    response.body(), RequestErrorType.COMMON_ERROR,
+                    response.body(), RequestErrorType.TOKEN_INVALID,
                     baseResponse.message, baseResponse.code
                 )
+                mOnTokenInvalidListener!!.onTokenInvalid(
+                    baseResponse.code, baseResponse.message
+                )
             }
-        } else {//Service类中的返回类型没有继承 BaseResponse
+        } else {//从后台获取数据失败，其它未定义的错误
             listener.requestError(
-                null, RequestErrorType.COMMON_ERROR,
-                "请求返回数据的第一层类型必须继承 BaseResponse！", CodeConstant.REQUEST_FAILD_CODE
+                response.body(), RequestErrorType.COMMON_ERROR,
+                baseResponse.message, baseResponse.code
             )
         }
     }

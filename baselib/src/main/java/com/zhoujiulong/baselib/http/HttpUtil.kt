@@ -5,6 +5,7 @@ import com.zhoujiulong.baselib.http.listener.DownLoadListener
 import com.zhoujiulong.baselib.http.listener.OnTokenInvalidListener
 import com.zhoujiulong.baselib.http.listener.RequestListener
 import com.zhoujiulong.baselib.http.other.TimeOut
+import com.zhoujiulong.baselib.http.response.BaseResponse
 import kotlinx.coroutines.CoroutineScope
 import okhttp3.Interceptor
 import okhttp3.ResponseBody
@@ -69,7 +70,7 @@ object HttpUtil {
      * @param listener 请求完成后的回调
      * @return <T>       请求返回的数据对应的类型，第一层必须继承 BaseResponse
      */
-    fun <T> sendRequest(
+    fun <T : BaseResponse> sendRequest(
         scope: CoroutineScope, call: retrofit2.Call<T>, listener: RequestListener<T>
     ) {
         RequestHelper.instance.sendRequest(scope, call, listener)
