@@ -65,16 +65,10 @@ internal class RequestHelper private constructor() {
             return
         }
         scope.launch(Dispatchers.Main) {
-            try {
-                val response = withContext(Dispatchers.IO) { call.execute() }
-                when (val code = response.code()) {
-                    200 -> sendRequestSuccess(response, listener)
-                    else -> checkErrorCode(code, listener)
-                }
-            } catch (e: Exception) {
-                listener.requestError(
-                    null, RequestErrorType.COMMON_ERROR, "请求失败", CodeConstant.REQUEST_FAILD_CODE
-                )
+            val response = withContext(Dispatchers.IO) { call.execute() }
+            when (val code = response.code()) {
+                200 -> sendRequestSuccess(response, listener)
+                else -> checkErrorCode(code, listener)
             }
         }
     }
@@ -144,19 +138,15 @@ internal class RequestHelper private constructor() {
             return
         }
         scope.launch(Dispatchers.Main) {
-            try {
-                val response = withContext(Dispatchers.IO) { call.execute() }
-                val saveFile = File(flePath)
-                when {
-                    response.code() != 200 -> checkErrorCode(response, listener)
-                    !saveFile.exists() || !saveFile.isDirectory -> {
-                        val mkDirSuccess = saveFile.mkdir()
-                        if (!mkDirSuccess) listener.onFail("创建本地的文件夹失败")
-                    }
-                    else -> sendDownloadRequestSuccess(saveFile, fileName, response, listener)
+            val response = withContext(Dispatchers.IO) { call.execute() }
+            val saveFile = File(flePath)
+            when {
+                response.code() != 200 -> checkErrorCode(response, listener)
+                !saveFile.exists() || !saveFile.isDirectory -> {
+                    val mkDirSuccess = saveFile.mkdir()
+                    if (!mkDirSuccess) listener.onFail("创建本地的文件夹失败")
                 }
-            } catch (e: Exception) {
-                listener.onFail("下载失败" + e.message)
+                else -> sendDownloadRequestSuccess(saveFile, fileName, response, listener)
             }
         }
     }
