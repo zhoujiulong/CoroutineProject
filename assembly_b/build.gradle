@@ -12,8 +12,6 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-kapt'
 
-apply plugin: 'kotlin-android-extensions'
-
 
 kapt {
     arguments {
@@ -88,6 +86,10 @@ android {
                 manifest.srcFile 'src/main/AndroidManifest.xml'
             }
         }
+    }
+
+    viewBinding{
+        enabled = true
     }
 
     resourcePrefix "b_"

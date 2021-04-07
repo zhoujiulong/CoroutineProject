@@ -12,9 +12,9 @@ class ActivityFragmentManager private constructor() {
     companion object {
 
         @Volatile
-        private var fragmentStack: Stack<SimpleFragment> = Stack()
+        private var fragmentStack: Stack<SimpleFragment<*>> = Stack()
         @Volatile
-        private var activityStack: Stack<SimpleActivity> = Stack()
+        private var activityStack: Stack<SimpleActivity<*>> = Stack()
         @Volatile
         private var instance: ActivityFragmentManager? = null
 
@@ -37,7 +37,7 @@ class ActivityFragmentManager private constructor() {
     /**
      * 获取当前的Fragment
      */
-    val currentFragment: SimpleFragment?
+    val currentFragment: SimpleFragment<*>?
         get() = if (fragmentStack.size > 0) fragmentStack.lastElement() else null
 
     /**
@@ -45,7 +45,7 @@ class ActivityFragmentManager private constructor() {
      *
      * @param fragment Fragment
      */
-    fun addFragment(fragment: SimpleFragment) {
+    fun addFragment(fragment: SimpleFragment<*>) {
         fragmentStack.add(fragment)
     }
 
@@ -54,14 +54,14 @@ class ActivityFragmentManager private constructor() {
      *
      * @param fragment Fragment
      */
-    fun removeFragment(fragment: SimpleFragment) {
+    fun removeFragment(fragment: SimpleFragment<*>) {
         fragmentStack.remove(fragment)
     }
 
     /**
      * 获取当前的Activity
      */
-    val currentActivity: SimpleActivity
+    val currentActivity: SimpleActivity<*>
         get() = activityStack.lastElement()
 
     /**
@@ -69,7 +69,7 @@ class ActivityFragmentManager private constructor() {
      *
      * @param activity Activity
      */
-    fun addActivity(activity: SimpleActivity) {
+    fun addActivity(activity: SimpleActivity<*>) {
         activityStack.add(activity)
     }
 
@@ -78,7 +78,7 @@ class ActivityFragmentManager private constructor() {
      *
      * @param activity Activity
      */
-    fun removeActivity(activity: SimpleActivity) {
+    fun removeActivity(activity: SimpleActivity<*>) {
         activityStack.remove(activity)
     }
 
@@ -87,7 +87,7 @@ class ActivityFragmentManager private constructor() {
      *
      * @param activity Activity
      */
-    fun finishActivity(activity: SimpleActivity) {
+    fun finishActivity(activity: SimpleActivity<*>) {
         activityStack.remove(activity)
         activity.finish()
     }

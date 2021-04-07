@@ -4,9 +4,6 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-kapt'
 
-apply plugin: 'kotlin-android-extensions'
-
-
 Properties configAssemblyProp = new Properties()
 configAssemblyProp.load(new FileInputStream(file("$rootDir/config_assembly.properties")))
 Properties configProp = new Properties()
@@ -73,6 +70,10 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    viewBinding{
+        enabled = true
     }
 }
 

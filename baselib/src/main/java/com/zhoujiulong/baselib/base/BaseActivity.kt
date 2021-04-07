@@ -3,8 +3,10 @@ package com.zhoujiulong.baselib.base
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewbinding.ViewBinding
 
-abstract class BaseActivity<T : BaseViewModel<out BaseRepository<*>>> : SimpleActivity() {
+abstract class BaseActivity<T : BaseViewModel<out BaseRepository<*>>, B : ViewBinding> :
+    SimpleActivity<B>() {
 
     protected val mViewModel: T by lazy {
         val cl = getViewModelClass()

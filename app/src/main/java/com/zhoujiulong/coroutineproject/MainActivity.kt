@@ -1,6 +1,7 @@
 package com.zhoujiulong.coroutineproject
 
 import android.Manifest
+import android.view.LayoutInflater
 import android.view.View
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
@@ -8,12 +9,12 @@ import com.zhoujiulong.baselib.base.BaseActivity
 import com.zhoujiulong.baselib.utils.JsonUtil
 import com.zhoujiulong.baselib.utils.ToastUtil
 import com.zhoujiulong.commonlib.constants.RouteNameConstants
+import com.zhoujiulong.coroutineproject.databinding.ActivityMainBinding
 import com.zhoujiulong.coroutineproject.impl.MainViewModel
-import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity<MainViewModel>() {
+class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 
-    override fun getLayoutId(): Int = R.layout.activity_main
+    override fun getViewBinding() = ActivityMainBinding.inflate(LayoutInflater.from(this))
 
     override fun getViewModelClass(): Class<MainViewModel> {
         mIsSaveStateViewModel = true
@@ -24,10 +25,13 @@ class MainActivity : BaseActivity<MainViewModel>() {
     }
 
     override fun initListener() {
-        setOnClick(tv_go_a, tv_go_b, tvPermissionTest, tvRequestTest, tv_download_file)
+        setOnClick(
+            mBinding.tvGoA, mBinding.tvGoB, mBinding.tvPermissionTest,
+            mBinding.tvRequestTest, mBinding.tvDownloadFile
+        )
 
         mViewModel.mDownLoadProgress.observe(this, Observer {
-            tv_download_detail.text = "下载进度：$it"
+            mBinding.tvDownloadDetail.text = "下载进度：$it"
         })
         mViewModel.mDownLoadSuccess.observe(this, Observer {
             ToastUtil.toast("下载成功：$it")
@@ -45,11 +49,13 @@ class MainActivity : BaseActivity<MainViewModel>() {
 
     override fun onClick(v: View?) {
         when (v) {
-            tv_go_a -> ARouter.getInstance().build(RouteNameConstants.ASSEMBLY_A_MAIN).navigation()
-            tv_go_b -> ARouter.getInstance().build(RouteNameConstants.ASSEMBLY_B_MAIN).navigation()
-            tvPermissionTest -> requestPermissionTest()
-            tvRequestTest -> mViewModel.requestTest()
-            tv_download_file -> mViewModel.downLoadApk()
+            mBinding.tvGoA -> ARouter.getInstance().build(RouteNameConstants.ASSEMBLY_A_MAIN)
+                .navigation()
+            mBinding.tvGoB -> ARouter.getInstance().build(RouteNameConstants.ASSEMBLY_B_MAIN)
+                .navigation()
+            mBinding.tvPermissionTest -> requestPermissionTest()
+            mBinding.tvRequestTest -> mViewModel.requestTest()
+            mBinding.tvDownloadFile -> mViewModel.downLoadApk()
         }
     }
 

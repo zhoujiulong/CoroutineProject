@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
 import com.zhoujiulong.baselib.app.ActivityFragmentManager
 
 /**
@@ -13,19 +14,17 @@ import com.zhoujiulong.baselib.app.ActivityFragmentManager
  * Time : 2017/03/24
  * Desc : SimpleFragment
  */
-abstract class SimpleFragment : Fragment(), View.OnClickListener {
+abstract class SimpleFragment<B : ViewBinding> : Fragment(), View.OnClickListener {
 
     private var mISFirstResume = true
 
-    protected lateinit var mRootView: View
+    protected val mBinding: B by lazy { getViewBinding() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        mRootView = inflater.inflate(getLayoutId(), container, false)
         ActivityFragmentManager.getInstance().addFragment(this)
-
-        return mRootView
+        return mBinding.root
     }
 
     override fun onResume() {
@@ -46,11 +45,11 @@ abstract class SimpleFragment : Fragment(), View.OnClickListener {
     }
 
     fun showLoading() {
-        if (activity is SimpleActivity) (activity as SimpleActivity).showLoading()
+        if (activity is SimpleActivity<*>) (activity as SimpleActivity<*>).showLoading()
     }
 
     fun hideLoading() {
-        if (activity is SimpleActivity) (activity as SimpleActivity).hideLoading()
+        if (activity is SimpleActivity<*>) (activity as SimpleActivity<*>).hideLoading()
     }
 
     /* ********************************************** 请求权限 **************************************************** */
@@ -64,8 +63,8 @@ abstract class SimpleFragment : Fragment(), View.OnClickListener {
         fail: (unGrantPermissions: List<String>) -> Unit,
         vararg permissions: String
     ) {
-        if (activity is SimpleActivity) {
-            (activity as SimpleActivity).requestPermission(success, fail, *permissions)
+        if (activity is SimpleActivity<*>) {
+            (activity as SimpleActivity<*>).requestPermission(success, fail, *permissions)
         }
     }
 
@@ -73,9 +72,9 @@ abstract class SimpleFragment : Fragment(), View.OnClickListener {
     /* ********************************************** 初始化相关方法 **************************************************** */
 
     /**
-     * 获取布局资源 id
+     * 获取布局控件
      */
-    protected abstract fun getLayoutId(): Int
+    protected abstract fun getViewBinding(): B
 
     /**
      * 初始化控件

@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.viewbinding.ViewBinding
 import com.zhoujiulong.baselib.LoadingDialog
 import com.zhoujiulong.baselib.app.ActivityFragmentManager
 
@@ -18,14 +19,16 @@ import com.zhoujiulong.baselib.app.ActivityFragmentManager
  * Time : 2017/03/24
  * Desc : SimpleActivity
  */
-abstract class SimpleActivity : AppCompatActivity(), View.OnClickListener {
+abstract class SimpleActivity<B : ViewBinding> : AppCompatActivity(), View.OnClickListener {
+
+    protected val mBinding: B by lazy { getViewBinding() }
 
     private var mISFirstResume = true
     private var mLoadingDialog: LoadingDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(getLayoutId())
+        setContentView(mBinding.root)
         ActivityFragmentManager.getInstance().addActivity(this)
     }
 
@@ -56,13 +59,22 @@ abstract class SimpleActivity : AppCompatActivity(), View.OnClickListener {
         mLoadingDialog?.dismiss()
     }
 
+    /**
+     * 設置點擊
+     */
+    fun setOnClick(vararg views: View) {
+        for (view in views) {
+            view.setOnClickListener(this)
+        }
+    }
+
     /* ********************************************** 初始化相关方法 **************************************************** */
     /* ********************************************** 初始化相关方法 **************************************************** */
 
     /**
-     * 获取布局文件资源 id
+     * 获取布局文件
      */
-    protected abstract fun getLayoutId(): Int
+    protected abstract fun getViewBinding(): B
 
     /**
      * 初始化控件
@@ -83,15 +95,6 @@ abstract class SimpleActivity : AppCompatActivity(), View.OnClickListener {
      * 获取数据
      */
     protected abstract fun getData()
-
-    /**
-     * 設置點擊
-     */
-    fun setOnClick(vararg views: View) {
-        for (view in views) {
-            view.setOnClickListener(this)
-        }
-    }
 
     /* ********************************************** 请求权限 **************************************************** */
     /* ********************************************** 请求权限 **************************************************** */

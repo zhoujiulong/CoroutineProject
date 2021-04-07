@@ -3,9 +3,11 @@ package com.zhoujiulong.baselib.base
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewbinding.ViewBinding
 import com.zhoujiulong.baselib.app.SimpleApplication
 
-abstract class BaseFragment<T : BaseViewModel<out BaseRepository<*>>> : SimpleFragment() {
+abstract class BaseFragment<T : BaseViewModel<out BaseRepository<*>>, B : ViewBinding> :
+    SimpleFragment<B>() {
 
     protected val mViewModel: T by lazy {
         val cl = getViewModelClass()

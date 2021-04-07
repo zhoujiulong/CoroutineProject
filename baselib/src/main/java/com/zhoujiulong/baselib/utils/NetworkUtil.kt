@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.telephony.TelephonyManager
-import android.text.TextUtils
 
 /**
  * 手机网络相关工具类

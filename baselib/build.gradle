@@ -4,8 +4,6 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-kapt'
 
-apply plugin: 'kotlin-android-extensions'
-
 
 // 加载config.properties文件
 Properties configProp = new Properties()
@@ -34,6 +32,10 @@ android {
             buildConfigField("String", "BASE_URL", configProp['DebugUrl'])
             buildConfigField("boolean", "DEBUG_MODE", "true")//是否debug模式
         }
+    }
+
+    viewBinding{
+        enabled = true
     }
 
     resourcePrefix "base_"
